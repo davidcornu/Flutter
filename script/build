@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+module Flutter
+  class Builder
+    def initialize
+      @app_root = File.expand_path "../", File.dirname(__FILE__)
+    end
+
+    def watch_sass
+      css_source_path = File.join @app_root, 'src/css/app.sass'
+      css_out_path    = File.join @app_root, 'css/app.css'
+
+      system 'rm', css_out_path if File.exists?(css_out_path)
+      system '/usr/bin/env', 'sass', '--watch', [css_source_path, css_out_path].join(':')
+    end
+
+    def watch_coffee
+      js_source_path  = File.join @app_root, 'src/js'
+      js_out_path     = File.join @app_root, 'js/app'
+
+      if Dir.exists?(js_out_path)
+        system 'rm', '-R', js_out_path
+        system 'mkdir', js_out_path
+      end
+      system '/usr/bin/env', 'coffee', '-o', js_out_path, '-cw', js_source_path
+    end
+
+    def sass_thread
+      @sass_thread ||= Thread.new { watch_sass }
+    end
+
+    def coffee_thread
+      @coffee_thread ||= Thread.new { watch_coffee }
+    end
+  end
+end
+
+builder = Flutter::Builder.new
+builder.sass_thread.join
+builder.coffee_thread.join
