@@ -36,5 +36,11 @@ module Flutter
 end
 
 builder = Flutter::Builder.new
+
+# Start threads
+builder.sass_thread
+builder.coffee_thread
+
+# Wait on threads
 builder.sass_thread.join
 builder.coffee_thread.join
