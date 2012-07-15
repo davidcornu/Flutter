@@ -1,0 +1,1 @@
+class window.Tweet extends Backbone.Model

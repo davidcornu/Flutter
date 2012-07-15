@@ -1,1 +1,3 @@
-alert 'hello'
+window.router = new Router
+
+Backbone.history.start()
